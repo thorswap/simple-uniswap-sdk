@@ -1,8 +1,7 @@
-import { ChainId } from '../enums/chain-id';
 import { UniswapVersion } from '../enums/uniswap-version';
 import { UniswapPairSettings } from '../factories/pair/models/uniswap-pair-settings';
 import { UniswapPair } from '../factories/pair/uniswap-pair';
-import { ETH, EthersProvider, TradeDirection } from '../index';
+import { TradeDirection } from '../index';
 
 // WBTC - 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599
 // FUN - 0x419D0d8BdD9aF5e606Ae2232ed285Aff190E711b
@@ -12,27 +11,105 @@ import { ETH, EthersProvider, TradeDirection } from '../index';
 // AAVE - 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9
 // GTC - 0xde30da39c46104798bb5aa3fe8b9e0e1f348163f
 
+const BASE_CUSTOM_NETWORK = {
+  nameNetwork: "BASE",
+  multicallContractAddress: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+  },
+  nativeWrappedTokenInfo: {
+    chainId: 8453,
+    contractAddress: "0x4200000000000000000000000000000000000006",
+    decimals: 18,
+    symbol: "WETH",
+    name: "Wrapped Ether",
+  },
+  baseTokens: {
+    usdt: {
+      chainId: 8453,
+      contractAddress: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+      decimals: 6,
+      symbol: "USDT",
+      name: "Tether USDT",
+    },
+    usdc: {
+      chainId: 8453,
+      contractAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      decimals: 6,
+      symbol: "USDC",
+      name: "USD Coin",
+    },
+  },
+};
+
+const ARBITRUM_CUSTOM_NETWORK = {
+  nameNetwork: "ARB",
+  multicallContractAddress: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+  },
+  nativeWrappedTokenInfo: {
+    chainId: 42161,
+    contractAddress: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+    decimals: 18,
+    symbol: "WETH",
+    name: "Wrapped Ether",
+  },
+  baseTokens: {
+    usdt: {
+      chainId: 42161,
+      contractAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      decimals: 6,
+      symbol: "USDT",
+      name: "Tether USDT",
+    },
+    usdc: {
+      chainId: 42161,
+      contractAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      decimals: 6,
+      symbol: "USDC",
+      name: "USD Coin",
+    },
+  },
+};
+
+//0x3bb4445d30ac020a84c1b5a8a2c6248ebc9779d0
+// 0x0000000000000000000000000000000000000000
 const routeTest = async () => {
-  const fromTokenContractAddress = ETH.MAINNET().contractAddress; //'0xEf0e839Cf88E47be676E72D5a9cB6CED99FaD1CF';
-  const toTokenContractAddress = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'; // 0x1985365e9f78359a9B6AD760e32412f4a445E862
-  const ethereumAddress = '0x37c81284caA97131339415687d192BF7D18F0f2a';
+  const fromTokenContractAddress = '0x4200000000000000000000000000000000000006'; //'0xEf0e839Cf88E47be676E72D5a9cB6CED99FaD1CF';
+  const toTokenContractAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // 0x1985365e9f78359a9B6AD760e32412f4a445E862
+  const ethereumAddress = '0x986f66F28C6a2BBE939dF3161D1D2b238933895c';
+
+  // const fromTokenContractAddress = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'; //'0xEf0e839Cf88E47be676E72D5a9cB6CED99FaD1CF';
+  // const toTokenContractAddress = '0xaf88d065e77c8cC2239327C5EDb3A432268e5831'; // 0x1985365e9f78359a9B6AD760e32412f4a445E862
+  // const ethereumAddress = '0x986f66F28C6a2BBE939dF3161D1D2b238933895c';
+
+  console.log(ARBITRUM_CUSTOM_NETWORK.nameNetwork)
 
   const uniswapPair = new UniswapPair({
     fromTokenContractAddress,
     toTokenContractAddress,
     ethereumAddress,
-    chainId: ChainId.MAINNET,
+    chainId: 8453,
+    //providerUrl: "https://arb1.arbitrum.io/rpc", //"https://base.llamarpc.com",
+    providerUrl: "https://base.llamarpc.com",
     settings: new UniswapPairSettings({
       // if not supplied it use `0.005` which is 0.5%;
       // all figures
-      slippage: 0.005,
-      // if not supplied it will use 20 a deadline minutes
-      deadlineMinutes: 20,
-      disableMultihops: false,
-      uniswapVersions: [UniswapVersion.v2, UniswapVersion.v3],
-      gasSettings: {
-        getGasPrice: async () => '90',
-      },
+      slippage: 0.01,
+      deadlineMinutes: 10,
+      disableMultihops: true,
+      uniswapVersions: [UniswapVersion.v3],
+      customNetwork: BASE_CUSTOM_NETWORK,
+      cloneUniswapContractDetails: {
+        v3Override: {
+          routerAddress: "0x2626664c2603336E57B271c5C0b26F421741e481",
+          factoryAddress: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+          quoterAddress: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a"
+        }
+      }
     }),
   });
 
@@ -40,7 +117,10 @@ const routeTest = async () => {
 
   const uniswapPairFactory = await uniswapPair.createFactory();
 
-  const trade = await uniswapPairFactory.trade('0.0001', TradeDirection.input);
+  const trade = await uniswapPairFactory.findBestRoute(
+    "20",
+    TradeDirection.input
+  )
 
   console.log(new Date().getTime() - startTime);
   console.log(trade);
@@ -53,8 +133,8 @@ const routeTest = async () => {
   //   )
   // );
 
-  const ethers = new EthersProvider({ chainId: ChainId.MAINNET });
-  await ethers.provider.estimateGas(trade.transaction);
+  // const ethers = new EthersProvider({ chainId: ChainId.MAINNET });
+  // await ethers.provider.estimateGas(trade.transaction);
   // console.log(
   //   'gas',
   //   (await ethers.provider.estimateGas(trade.transaction)).toHexString()

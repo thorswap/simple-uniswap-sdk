@@ -418,13 +418,13 @@ export class UniswapRouterFactory {
               direction === TradeDirection.input
                 ? 'quoteExactInputSingle'
                 : 'quoteExactOutputSingle',
-            methodParameters: [
-              routeCombo[0],
-              routeCombo[1],
-              percentToFeeAmount(routes.v3[i].liquidityProviderFeesV3[0]),
-              tradeAmount,
-              0,
-            ],
+            methodParameters: [{
+              tokenIn: routeCombo[0],
+              tokenOut: routeCombo[1],
+              amountIn: tradeAmount,
+              fee: percentToFeeAmount(routes.v3[i].liquidityProviderFeesV3[0]),
+              sqrtPriceLimitX96: 0
+            }],
           });
         } else if (routeCombo.length > 2) {
           contractCallContext[
