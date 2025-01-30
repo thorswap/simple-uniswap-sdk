@@ -1,10 +1,10 @@
-import { EthersContractContextV5 } from 'ethereum-abi-types-generator';
 import {
+  ContractTransaction,
+  BytesLike as Arrayish,
   BigNumber,
   BigNumberish,
-  BytesLike as Arrayish,
-  ContractTransaction,
 } from 'ethers';
+import { EthersContractContextV5 } from 'ethereum-abi-types-generator';
 
 export type ContractContext = EthersContractContextV5<
   UniswapQuoterV3,
@@ -64,6 +64,20 @@ export type UniswapQuoterV3MethodNames =
   | 'quoteExactOutput'
   | 'quoteExactOutputSingle'
   | 'uniswapV3SwapCallback';
+export interface QuoteExactInputSingleRequest {
+  tokenIn: string;
+  tokenOut: string;
+  amountIn: BigNumberish;
+  fee: BigNumberish;
+  sqrtPriceLimitX96: BigNumberish;
+}
+export interface QuoteExactOutputSingleRequest {
+  tokenIn: string;
+  tokenOut: string;
+  amount: BigNumberish;
+  fee: BigNumberish;
+  sqrtPriceLimitX96: BigNumberish;
+}
 export interface UniswapQuoterV3 {
   /**
    * Payable: false
@@ -110,18 +124,10 @@ export interface UniswapQuoterV3 {
    * Constant: false
    * StateMutability: nonpayable
    * Type: function
-   * @param tokenIn Type: address, Indexed: false
-   * @param tokenOut Type: address, Indexed: false
-   * @param fee Type: uint24, Indexed: false
-   * @param amountIn Type: uint256, Indexed: false
-   * @param sqrtPriceLimitX96 Type: uint160, Indexed: false
+   * @param params Type: tuple, Indexed: false
    */
   quoteExactInputSingle(
-    tokenIn: string,
-    tokenOut: string,
-    fee: BigNumberish,
-    amountIn: BigNumberish,
-    sqrtPriceLimitX96: BigNumberish,
+    params: QuoteExactInputSingleRequest,
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
   /**
@@ -142,18 +148,10 @@ export interface UniswapQuoterV3 {
    * Constant: false
    * StateMutability: nonpayable
    * Type: function
-   * @param tokenIn Type: address, Indexed: false
-   * @param tokenOut Type: address, Indexed: false
-   * @param fee Type: uint24, Indexed: false
-   * @param amountOut Type: uint256, Indexed: false
-   * @param sqrtPriceLimitX96 Type: uint160, Indexed: false
+   * @param params Type: tuple, Indexed: false
    */
   quoteExactOutputSingle(
-    tokenIn: string,
-    tokenOut: string,
-    fee: BigNumberish,
-    amountOut: BigNumberish,
-    sqrtPriceLimitX96: BigNumberish,
+    params: QuoteExactOutputSingleRequest,
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
   /**

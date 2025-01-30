@@ -14,7 +14,7 @@ export class UniswapContractContextV3 {
   /**
    * The uniswap quoter address
    */
-  public static quoterAddress = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
+  public static quoterAddress = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e';
 
   /**
    * Uniswap router
