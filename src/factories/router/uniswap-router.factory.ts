@@ -582,7 +582,6 @@ export class UniswapRouterFactory {
           parseEther(ethAmountIn),
           convertedMinTokens,
           routeQuoteTradeContext,
-          deadline
         );
       default:
         throw new UniswapError(
@@ -624,7 +623,6 @@ export class UniswapRouterFactory {
           amountOut,
           parseEther(ethAmountInMax),
           routeQuoteTradeContext,
-          deadline
         );
       default:
         throw new UniswapError(
@@ -668,7 +666,6 @@ export class UniswapRouterFactory {
           amountIn,
           parseEther(ethAmountOutMin),
           routeQuoteTradeContext,
-          deadline
         );
       default:
         throw new UniswapError(
@@ -712,7 +709,6 @@ export class UniswapRouterFactory {
           parseEther(ethAmountOut),
           amountInMax,
           routeQuoteTradeContext,
-          deadline
         );
       default:
         throw new UniswapError(
@@ -757,7 +753,6 @@ export class UniswapRouterFactory {
           amountIn,
           amountMin,
           routeQuoteTradeContext,
-          deadline
         );
       default:
         throw new UniswapError(
@@ -803,7 +798,6 @@ export class UniswapRouterFactory {
           amountOut,
           amountInMax,
           routeQuoteTradeContext,
-          deadline
         );
       default:
         throw new UniswapError(
@@ -824,7 +818,6 @@ export class UniswapRouterFactory {
     tokenAmount: BigNumber,
     tokenAmountMin: BigNumber,
     routeQuoteTradeContext: RouteQuoteTradeContext,
-    deadline: string
   ): string {
     const isNativeReceivingNativeEth = isNativeEth(
       this._toToken.contractAddress
@@ -841,7 +834,6 @@ export class UniswapRouterFactory {
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
             : this._ethereumAddress,
-        deadline,
         amountIn: hexlify(tokenAmount),
         amountOutMinimum: hexlify(tokenAmountMin),
         sqrtPriceLimitX96: 0,
@@ -863,7 +855,6 @@ export class UniswapRouterFactory {
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
             : this._ethereumAddress,
-        deadline,
         amountIn: hexlify(tokenAmount),
         amountOutMinimum: hexlify(tokenAmountMin),
       };
@@ -896,7 +887,6 @@ export class UniswapRouterFactory {
     amountOut: BigNumber,
     amountInMaximum: BigNumber,
     routeQuoteTradeContext: RouteQuoteTradeContext,
-    deadline: string
   ): string {
     const isNativeReceivingNativeEth = isNativeEth(
       this._toToken.contractAddress
@@ -913,7 +903,6 @@ export class UniswapRouterFactory {
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
             : this._ethereumAddress,
-        deadline,
         amountOut: hexlify(amountOut),
         amountInMaximum: hexlify(amountInMaximum),
         sqrtPriceLimitX96: 0,
@@ -933,7 +922,6 @@ export class UniswapRouterFactory {
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
             : this._ethereumAddress,
-        deadline,
         amountOut: hexlify(amountOut),
         amountInMaximum: hexlify(amountInMaximum),
       };
