@@ -74,7 +74,8 @@ export class UniswapRouterContractFactoryV3 {
    */
   public unwrapWETH9(amountMinimum: BigNumberish, recipient: string): string {
     return this._uniswapRouterContract.interface.encodeFunctionData(
-      'unwrapWETH9',
+      //@ts-expect-error explicit matching
+      'unwrapWETH9(uint256,address)',
       [amountMinimum, recipient]
     );
   }
@@ -85,7 +86,8 @@ export class UniswapRouterContractFactoryV3 {
    */
   public multicall(data: BytesLike[]): string {
     return this._uniswapRouterContract.interface.encodeFunctionData(
-      'multicall',
+      //@ts-expect-error explicit matching
+      'multicall(bytes[])',
       [data]
     );
   }

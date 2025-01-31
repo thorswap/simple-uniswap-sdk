@@ -1,10 +1,10 @@
-import { EthersContractContextV5 } from 'ethereum-abi-types-generator';
 import {
+  ContractTransaction,
+  BytesLike as Arrayish,
   BigNumber,
   BigNumberish,
-  BytesLike as Arrayish,
-  ContractTransaction,
 } from 'ethers';
+import { EthersContractContextV5 } from 'ethereum-abi-types-generator';
 
 export type ContractContext = EthersContractContextV5<
   UniswapRouterV3,
@@ -58,26 +58,47 @@ export interface UniswapRouterV3EventsContext {}
 export type UniswapRouterV3MethodNames =
   | 'new'
   | 'WETH9'
+  | 'approveMax'
+  | 'approveMaxMinusOne'
+  | 'approveZeroThenMax'
+  | 'approveZeroThenMaxMinusOne'
+  | 'callPositionManager'
+  | 'checkOracleSlippage'
+  | 'checkOracleSlippage'
   | 'exactInput'
   | 'exactInputSingle'
   | 'exactOutput'
   | 'exactOutputSingle'
   | 'factory'
+  | 'factoryV2'
+  | 'getApprovalType'
+  | 'increaseLiquidity'
+  | 'mint'
   | 'multicall'
+  | 'multicall'
+  | 'multicall'
+  | 'positionManager'
+  | 'pull'
   | 'refundETH'
   | 'selfPermit'
   | 'selfPermitAllowed'
   | 'selfPermitAllowedIfNecessary'
   | 'selfPermitIfNecessary'
+  | 'swapExactTokensForTokens'
+  | 'swapTokensForExactTokens'
   | 'sweepToken'
+  | 'sweepToken'
+  | 'sweepTokenWithFee'
   | 'sweepTokenWithFee'
   | 'uniswapV3SwapCallback'
   | 'unwrapWETH9'
-  | 'unwrapWETH9WithFee';
+  | 'unwrapWETH9'
+  | 'unwrapWETH9WithFee'
+  | 'unwrapWETH9WithFee'
+  | 'wrapETH';
 export interface ExactInputRequest {
   path: Arrayish;
   recipient: string;
-  deadline: BigNumberish;
   amountIn: BigNumberish;
   amountOutMinimum: BigNumberish;
 }
@@ -86,7 +107,6 @@ export interface ExactInputSingleRequest {
   tokenOut: string;
   fee: BigNumberish;
   recipient: string;
-  deadline: BigNumberish;
   amountIn: BigNumberish;
   amountOutMinimum: BigNumberish;
   sqrtPriceLimitX96: BigNumberish;
@@ -94,7 +114,6 @@ export interface ExactInputSingleRequest {
 export interface ExactOutputRequest {
   path: Arrayish;
   recipient: string;
-  deadline: BigNumberish;
   amountOut: BigNumberish;
   amountInMaximum: BigNumberish;
 }
@@ -103,10 +122,26 @@ export interface ExactOutputSingleRequest {
   tokenOut: string;
   fee: BigNumberish;
   recipient: string;
-  deadline: BigNumberish;
   amountOut: BigNumberish;
   amountInMaximum: BigNumberish;
   sqrtPriceLimitX96: BigNumberish;
+}
+export interface IncreaseLiquidityRequest {
+  token0: string;
+  token1: string;
+  tokenId: BigNumberish;
+  amount0Min: BigNumberish;
+  amount1Min: BigNumberish;
+}
+export interface MintRequest {
+  token0: string;
+  token1: string;
+  fee: BigNumberish;
+  tickLower: BigNumberish;
+  tickUpper: BigNumberish;
+  amount0Min: BigNumberish;
+  amount1Min: BigNumberish;
+  recipient: string;
 }
 export interface UniswapRouterV3 {
   /**
@@ -114,11 +149,15 @@ export interface UniswapRouterV3 {
    * Constant: false
    * StateMutability: nonpayable
    * Type: constructor
-   * @param _factory Type: address, Indexed: false
+   * @param _factoryV2 Type: address, Indexed: false
+   * @param factoryV3 Type: address, Indexed: false
+   * @param _positionManager Type: address, Indexed: false
    * @param _WETH9 Type: address, Indexed: false
    */
   'new'(
-    _factory: string,
+    _factoryV2: string,
+    factoryV3: string,
+    _positionManager: string,
     _WETH9: string,
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
@@ -129,6 +168,93 @@ export interface UniswapRouterV3 {
    * Type: function
    */
   WETH9(overrides?: ContractCallOverrides): Promise<string>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   */
+  approveMax(
+    token: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   */
+  approveMaxMinusOne(
+    token: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   */
+  approveZeroThenMax(
+    token: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   */
+  approveZeroThenMaxMinusOne(
+    token: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param data Type: bytes, Indexed: false
+   */
+  callPositionManager(
+    data: Arrayish,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: false
+   * Constant: true
+   * StateMutability: view
+   * Type: function
+   * @param paths Type: bytes[], Indexed: false
+   * @param amounts Type: uint128[], Indexed: false
+   * @param maximumTickDivergence Type: uint24, Indexed: false
+   * @param secondsAgo Type: uint32, Indexed: false
+   */
+  checkOracleSlippage(
+    paths: Arrayish[],
+    amounts: BigNumberish[],
+    maximumTickDivergence: BigNumberish,
+    secondsAgo: BigNumberish,
+    overrides?: ContractCallOverrides
+  ): Promise<void>;
+  /**
+   * Payable: false
+   * Constant: true
+   * StateMutability: view
+   * Type: function
+   * @param path Type: bytes, Indexed: false
+   * @param maximumTickDivergence Type: uint24, Indexed: false
+   * @param secondsAgo Type: uint32, Indexed: false
+   */
+  checkOracleSlippage(
+    path: Arrayish,
+    maximumTickDivergence: BigNumberish,
+    secondsAgo: BigNumberish,
+    overrides?: ContractCallOverrides
+  ): Promise<void>;
   /**
    * Payable: true
    * Constant: false
@@ -181,6 +307,74 @@ export interface UniswapRouterV3 {
    */
   factory(overrides?: ContractCallOverrides): Promise<string>;
   /**
+   * Payable: false
+   * Constant: true
+   * StateMutability: view
+   * Type: function
+   */
+  factoryV2(overrides?: ContractCallOverrides): Promise<string>;
+  /**
+   * Payable: false
+   * Constant: false
+   * StateMutability: nonpayable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   * @param amount Type: uint256, Indexed: false
+   */
+  getApprovalType(
+    token: string,
+    amount: BigNumberish,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param params Type: tuple, Indexed: false
+   */
+  increaseLiquidity(
+    params: IncreaseLiquidityRequest,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param params Type: tuple, Indexed: false
+   */
+  mint(
+    params: MintRequest,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param previousBlockhash Type: bytes32, Indexed: false
+   * @param data Type: bytes[], Indexed: false
+   */
+  multicall(
+    previousBlockhash: Arrayish,
+    data: Arrayish[],
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param deadline Type: uint256, Indexed: false
+   * @param data Type: bytes[], Indexed: false
+   */
+  multicall(
+    deadline: BigNumberish,
+    data: Arrayish[],
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
    * Payable: true
    * Constant: false
    * StateMutability: payable
@@ -189,6 +383,26 @@ export interface UniswapRouterV3 {
    */
   multicall(
     data: Arrayish[],
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: false
+   * Constant: true
+   * StateMutability: view
+   * Type: function
+   */
+  positionManager(overrides?: ContractCallOverrides): Promise<string>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   * @param value Type: uint256, Indexed: false
+   */
+  pull(
+    token: string,
+    value: BigNumberish,
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
   /**
@@ -289,6 +503,40 @@ export interface UniswapRouterV3 {
    * Constant: false
    * StateMutability: payable
    * Type: function
+   * @param amountIn Type: uint256, Indexed: false
+   * @param amountOutMin Type: uint256, Indexed: false
+   * @param path Type: address[], Indexed: false
+   * @param to Type: address, Indexed: false
+   */
+  swapExactTokensForTokens(
+    amountIn: BigNumberish,
+    amountOutMin: BigNumberish,
+    path: string[],
+    to: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param amountOut Type: uint256, Indexed: false
+   * @param amountInMax Type: uint256, Indexed: false
+   * @param path Type: address[], Indexed: false
+   * @param to Type: address, Indexed: false
+   */
+  swapTokensForExactTokens(
+    amountOut: BigNumberish,
+    amountInMax: BigNumberish,
+    path: string[],
+    to: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
    * @param token Type: address, Indexed: false
    * @param amountMinimum Type: uint256, Indexed: false
    * @param recipient Type: address, Indexed: false
@@ -297,6 +545,36 @@ export interface UniswapRouterV3 {
     token: string,
     amountMinimum: BigNumberish,
     recipient: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   * @param amountMinimum Type: uint256, Indexed: false
+   */
+  sweepToken(
+    token: string,
+    amountMinimum: BigNumberish,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param token Type: address, Indexed: false
+   * @param amountMinimum Type: uint256, Indexed: false
+   * @param feeBips Type: uint256, Indexed: false
+   * @param feeRecipient Type: address, Indexed: false
+   */
+  sweepTokenWithFee(
+    token: string,
+    amountMinimum: BigNumberish,
+    feeBips: BigNumberish,
+    feeRecipient: string,
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
   /**
@@ -352,6 +630,17 @@ export interface UniswapRouterV3 {
    * StateMutability: payable
    * Type: function
    * @param amountMinimum Type: uint256, Indexed: false
+   */
+  unwrapWETH9(
+    amountMinimum: BigNumberish,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param amountMinimum Type: uint256, Indexed: false
    * @param recipient Type: address, Indexed: false
    * @param feeBips Type: uint256, Indexed: false
    * @param feeRecipient Type: address, Indexed: false
@@ -361,6 +650,32 @@ export interface UniswapRouterV3 {
     recipient: string,
     feeBips: BigNumberish,
     feeRecipient: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param amountMinimum Type: uint256, Indexed: false
+   * @param feeBips Type: uint256, Indexed: false
+   * @param feeRecipient Type: address, Indexed: false
+   */
+  unwrapWETH9WithFee(
+    amountMinimum: BigNumberish,
+    feeBips: BigNumberish,
+    feeRecipient: string,
+    overrides?: ContractTransactionOverrides
+  ): Promise<ContractTransaction>;
+  /**
+   * Payable: true
+   * Constant: false
+   * StateMutability: payable
+   * Type: function
+   * @param value Type: uint256, Indexed: false
+   */
+  wrapETH(
+    value: BigNumberish,
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
 }
